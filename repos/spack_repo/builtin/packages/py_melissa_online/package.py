@@ -20,6 +20,7 @@ class PyMelissaOnline(PythonPackage):
     license("BSD-3-Clause")
 
     version("develop", branch="develop", preferred=True)
+    version("3.0.1", sha256="70c4b874bdd0cb483db006d95497d4b1dd98a3a49daafa7c09b816e191f083f2")
     version("3.0.0", sha256="9146ac9eff2ae029a189a0fc944b1857f3fd9230000e151a693e73e10943486c")
 
     variant(
