@@ -33,7 +33,7 @@ class PyMpi4jax(PythonPackage, CudaPackage):
     with default_args(type="build"):
         depends_on("py-setuptools@82.0.1:", when="@0.9.1")
         depends_on("py-setuptools@42:")
-        depends_on("py-cython@0.21:")
+        depends_on("py-cython@0.21:", when=":@0.8")
 
     with default_args(type=("build", "run")):
         depends_on("py-nanobind@2:", when="@0.9.1")
