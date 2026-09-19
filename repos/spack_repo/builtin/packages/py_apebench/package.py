@@ -42,7 +42,7 @@ class PyApebench(PythonPackage):
         depends_on("py-typing-extensions@4.5.0:")
 
     def setup_run_environment(self, env):
-        if "py-jax" in self.spec and self.spec["py-jax"].satisfies("+cuda"):
+        if "py-jaxlib" in self.spec and self.spec["py-jaxlib"].satisfies("+cuda"):
             cuda_home = self.spec["cuda"].prefix
             # This is an irrelevant lib path and it is purely used by NVIDIA profilers.
             # But, since JAX throws RuntimeError on it, we set this path.
