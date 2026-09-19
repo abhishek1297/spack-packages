@@ -25,8 +25,8 @@ class PyExponax(PythonPackage):
     depends_on("python@3.10:3.12", type=("build", "run"))
 
     with default_args(type="run"):
+        depends_on("py-equinox@0.11.3:")
         depends_on("py-jax@0.4.13:")
         depends_on("py-jaxtyping@0.2.20:")
-        depends_on("py-typing-extensions@4.5.0:")
         depends_on("py-matplotlib@3.8.1:")
-        depends_on("py-equinox@0.11.3:")
+        depends_on("py-typing-extensions@4.5.0:")

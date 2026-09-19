@@ -28,18 +28,18 @@ class PyApebench(PythonPackage):
     depends_on("python@3.10:3.12", type=("build", "run"))
 
     with default_args(type="run"):
-        depends_on("py-jax@0.4.13:")
-        depends_on("py-jaxtyping@0.2.20:")
-        depends_on("py-typing-extensions@4.5.0:")
-        depends_on("py-tqdm@4.63.2:")
-        depends_on("py-matplotlib@3.8.1:")
-        depends_on("py-pandas@2.2.0:")
-        depends_on("py-seaborn@0.13.0:")
-        depends_on("py-optax@0.2.0:")
         depends_on("py-equinox@0.11.3:")
         depends_on("py-exponax@0.1.0")
+        depends_on("py-jax@0.4.13:")
+        depends_on("py-jaxtyping@0.2.20:")
+        depends_on("py-matplotlib@3.8.1:")
+        depends_on("py-optax@0.2.0:")
+        depends_on("py-pandas@2.2.0:")
         depends_on("py-pdequinox@0.1.2")
+        depends_on("py-seaborn@0.13.0:")
+        depends_on("py-tqdm@4.63.2:")
         depends_on("py-trainax@0.0.2")
+        depends_on("py-typing-extensions@4.5.0:")
 
     def setup_run_environment(self, env):
         if "py-jax" in self.spec and self.spec["py-jax"].satisfies("+cuda"):

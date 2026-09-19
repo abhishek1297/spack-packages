@@ -43,18 +43,18 @@ class PyEquinox(PythonPackage):
     version("0.11.3", sha256="a1273cc28c60d3131ac596f8a0f5c7dd384729e6cddae86e7be05f026880e8e0")
 
     depends_on("py-hatchling", type="build")
+
     with default_args(type=("build", "run")):
         depends_on("python@3.10:", when="@0.11.11:")
         depends_on("python@3.9:", when="@0.11.3:")
 
     with default_args(type="run"):
-        depends_on("py-jax@0.4.13:0.4.26", when="@:0.11.10")
-        depends_on("py-jax@0.4.38:0.5", when="@0.11.11:0.11.12")
         depends_on("py-jax@0.4.38:", when="@0.12:")
-
+        depends_on("py-jax@0.4.38:0.5", when="@0.11.11:0.11.12")
+        depends_on("py-jax@0.4.13:0.4.26", when="@:0.11.10")
         depends_on("py-jaxtyping@0.2.20:")
         depends_on("py-typing-extensions@4.5.0:")
         depends_on("py-wadler-lindig@0.1.0:")
 
-    conflicts("^py-jaxlib@0.7.0:0.7.1", when="@0.12:")
     conflicts("^py-jax@0.7.0:0.7.1", when="@0.12:")
+    conflicts("^py-jaxlib@0.7.0:0.7.1", when="@0.12:")
