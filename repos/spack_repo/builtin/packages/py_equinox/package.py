@@ -24,6 +24,7 @@ class PyEquinox(PythonPackage):
     maintainers("abhishek1297")
     license("Apache-2.0", checked_by="abhishek1297")
 
+    version("0.13.8", sha256="dd075050018e2dd02e252e9d29d3060f7e67f085622d8d27a8e89e24bb8523db")
     version("0.13.4", sha256="d4eed5d7f981a5ddcb7bc70e601707769fb4da20f777703cc6e01a6248af9758")
     version("0.13.2", sha256="509ad744ff99b7c684d45230d6890f9e78eac1a556d7a06db1eff664a3cac74f")
     version("0.13.1", sha256="e90f11cfe66b2f73f5c172260a17c48851794a0f243dd2cbe4ea70f4c90cbd07")
