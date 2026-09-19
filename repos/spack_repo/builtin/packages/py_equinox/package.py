@@ -2,13 +2,12 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack_repo.builtin.build_systems.cuda import CudaPackage
 from spack_repo.builtin.build_systems.python import PythonPackage
 
 from spack.package import *
 
 
-class PyEquinox(PythonPackage, CudaPackage):
+class PyEquinox(PythonPackage):
     """Equinox is your one-stop [JAX](https://github.com/google/jax) library,
     for everything you need that isn't already in core JAX:
     - neural networks (or more generally any model), with easy-to-use PyTorch-like syntax;
@@ -44,17 +43,11 @@ class PyEquinox(PythonPackage, CudaPackage):
     version("0.11.3", sha256="a1273cc28c60d3131ac596f8a0f5c7dd384729e6cddae86e7be05f026880e8e0")
 
     depends_on("py-hatchling", type="build")
-    depends_on("python@3.10:", type=("build", "run"), when="@0.11.11:")
-    depends_on("python@3.9:", type=("build", "run"), when="@0.11.3:")
+    with default_args(type=("build", "run")):
+        depends_on("python@3.10:", when="@0.11.11:")
+        depends_on("python@3.9:", when="@0.11.3:")
 
     with default_args(type="run"):
-        for arch in CudaPackage.cuda_arch_values:
-            cuda_specs = f"+cuda cuda_arch={arch}"
-            with when(cuda_specs):
-                depends_on(f"py-jaxlib@0.4.13:0.4.26 {cuda_specs}", when="@:0.11.10")
-                depends_on(f"py-jaxlib@0.4.38:0.5 {cuda_specs}", when="@0.11.11:0.11.12")
-                depends_on(f"py-jaxlib@0.4.38: {cuda_specs}", when="@0.12:")
-
         depends_on("py-jax@0.4.13:0.4.26", when="@:0.11.10")
         depends_on("py-jax@0.4.38:0.5", when="@0.11.11:0.11.12")
         depends_on("py-jax@0.4.38:", when="@0.12:")
