@@ -22,7 +22,7 @@ class PyExponax(PythonPackage):
     version("0.0.1", sha256="e2a201752d38dbfd233d52c2f59ed0dc344ccbb3e796b26c2713c6a2357d7366")
 
     depends_on("py-setuptools", type="build")
-    depends_on("python@3.10:3.12", type=("build", "run"))
+    depends_on("python@3.10:", type=("build", "run"))
 
     with default_args(type="run"):
         depends_on("py-equinox@0.11.3:")

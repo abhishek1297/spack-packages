@@ -23,7 +23,7 @@ class PyPdequinox(PythonPackage):
     version("0.1.0", sha256="07f7516fe26823e6c3b71f1ed5a170e97cc34ff1d1349435d4b7469adc540d3a")
 
     depends_on("py-setuptools", type="build")
-    depends_on("python@3.8:3.12", type=("build", "run"))
+    depends_on("python@3.8:", type=("build", "run"))
 
     with default_args(type="run"):
         depends_on("py-equinox@0.11.3:")

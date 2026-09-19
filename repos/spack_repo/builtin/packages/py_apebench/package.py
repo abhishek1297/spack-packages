@@ -25,7 +25,7 @@ class PyApebench(PythonPackage):
     version("0.1.1", sha256="c5ddd47799f0799b2c2e72c27d3d81993f6fa218a04b1df93d4c1850e4893bf9")
 
     depends_on("py-setuptools", type="build")
-    depends_on("python@3.10:3.12", type=("build", "run"))
+    depends_on("python@3.10:", type=("build", "run"))
 
     with default_args(type="run"):
         depends_on("py-equinox@0.11.3:")

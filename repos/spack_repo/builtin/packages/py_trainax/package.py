@@ -25,7 +25,7 @@ class PyTrainax(PythonPackage):
     version("0.0.1", sha256="19552dfca2d6f9d7e69963e978628adb19dc2ba9cb9563b510c19e136116c23a")
 
     depends_on("py-setuptools", type="build")
-    depends_on("python@3.8:3.12", type=("build", "run"))
+    depends_on("python@3.8:", type=("build", "run"))
 
     with default_args(type="run"):
         depends_on("py-equinox@0.11.3:")
