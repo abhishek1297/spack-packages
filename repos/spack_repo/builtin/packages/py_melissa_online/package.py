@@ -20,7 +20,7 @@ class PyMelissaOnline(PythonPackage):
     license("BSD-3-Clause")
 
     version("develop", branch="develop", preferred=True)
-    version("3.0.1", sha256="70c4b874bdd0cb483db006d95497d4b1dd98a3a49daafa7c09b816e191f083f2")
+    version("3.1.1", sha256="acdffb2431e4fa5456a3b4044ca1371758ea3e234038b856ad1a342a22bf111f")
     version(
         "3.0.0",
         sha256="9146ac9eff2ae029a189a0fc944b1857f3fd9230000e151a693e73e10943486c",
@@ -128,15 +128,6 @@ class PyMelissaOnline(PythonPackage):
     @run_before("install")
     def warn_about_variants(self):
         """Warns user"""
-
-        if "^py-torch%gcc@13:" in self.spec:
-            tty.warn(
-                "\n**********************************************************************"
-                "\n\t PyTorch builds may fail on recent GCC versions."
-                "\n\t It is recommended to use `%gcc@11:12`."
-                "\n**********************************************************************"
-            )
-
         if "+launcher_only" in self.spec:
             tty.warn(
                 "\n**********************************************************************"
