@@ -48,6 +48,18 @@ class RocprofilerSdk(ROCmLibrary, CMakePackage):
     license("MIT")
 
     version(
+        "10.0.0",
+        tag="therock-10.0",
+        commit="6b0e43f341195e203754e08f850e437ff2fc09f9",
+        submodules=submodules,
+    )
+    version(
+        "7.14.0",
+        tag="therock-7.14",
+        commit="2b22ab0195cc1461cd9abf3b969e9dd7c10af350",
+        submodules=submodules,
+    )
+    version(
         "7.13.0",
         git="https://github.com/ROCm/rocm-systems.git",
         tag="therock-7.13",
@@ -182,12 +194,25 @@ class RocprofilerSdk(ROCmLibrary, CMakePackage):
     depends_on("pkgconfig", when="@7.1:")
     depends_on("py-pybind11", when="@7.2:")
     depends_on("gotcha", when="@7.2:")
-    depends_on("fmt@:10", when="@7.2: ~internal-fmt")
+    depends_on("fmt@:10", when="@7.2:7.13 ~internal-fmt")
+    depends_on("fmt@:12.1", when="@7.14: ~internal-fmt")
     depends_on("glog", when="@7.2:")
+    depends_on("abseil-cpp", when="@7.13:")
 
     for ver in ["6.2.4", "6.3.0", "6.3.1", "6.3.2", "6.3.3", "6.4.0", "6.4.1", "6.4.2", "6.4.3"]:
         depends_on(f"aqlprofile@{ver}", when=f"@{ver}")
-    for ver in ["7.0.0", "7.0.2", "7.1.0", "7.1.1", "7.2.0", "7.2.1", "7.2.3", "7.13.0"]:
+    for ver in [
+        "7.0.0",
+        "7.0.2",
+        "7.1.0",
+        "7.1.1",
+        "7.2.0",
+        "7.2.1",
+        "7.2.3",
+        "7.13.0",
+        "7.14.0",
+        "10.0.0",
+    ]:
         depends_on(f"hsa-amd-aqlprofile@{ver}", when=f"@{ver}")
 
     for ver in [
@@ -208,6 +233,8 @@ class RocprofilerSdk(ROCmLibrary, CMakePackage):
         "7.2.1",
         "7.2.3",
         "7.13.0",
+        "7.14.0",
+        "10.0.0",
     ]:
         depends_on(f"hip@{ver}", when=f"@{ver}")
         depends_on(f"rocm-cmake@{ver}", when=f"@{ver}")
@@ -228,9 +255,15 @@ class RocprofilerSdk(ROCmLibrary, CMakePackage):
         "7.2.1",
         "7.2.3",
         "7.13.0",
+        "7.14.0",
+        "10.0.0",
     ]:
         for tgt in itertools.chain(["auto"], amdgpu_targets):
             depends_on(f"rocdecode@{ver} amdgpu_target={tgt}", when=f"@{ver} amdgpu_target={tgt}")
+
+    # rocprof-trace-decoder dependency from version 10.0.0
+    for ver in ["10.0.0"]:
+        depends_on(f"rocprof-trace-decoder@{ver}", when=f"@{ver}")
 
     resource(
         name="otf2",
@@ -264,6 +297,8 @@ class RocprofilerSdk(ROCmLibrary, CMakePackage):
             args.append(self.define("ROCPROFILER_BUILD_GLOG", "OFF"))
             args.append(self.define("ROCPROFILER_BUILD_GOTCHA", "OFF"))
             args.append(self.define("ROCPROFILER_BUILD_SQLITE3", "OFF"))
+        if self.spec.satisfies("@7.14:"):
+            args.append(self.define("ROCPROFILER_BUILD_ABSEIL", "OFF"))
         return args
 
     def setup_run_environment(self, env):

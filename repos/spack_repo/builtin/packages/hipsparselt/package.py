@@ -31,6 +31,8 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
         ("7.2.3", "https://github.com/ROCm/rocm-libraries/archive/rocm-{0}.tar.gz"),
         (None, "https://github.com/ROCm/rocm-libraries/archive/refs/tags/therock-{1}.{2}.tar.gz"),
     ]
+    version("10.0.0", sha256="eb7f255d6627d3cfb312a7bcf41d701517ecaeac88382b56f2bde8d4947ea592")
+    version("7.14.0", sha256="7bd30a64e1ac823861db07d9fe115256a16f02c527de49a6ecbdbbcb4018c0d8")
     version("7.13.0", sha256="ae19ac6c8a86d0e1685d937409390506fa0f80f3cb82ea3e3b76071898c25771")
     version("7.2.3", sha256="300cc50720d40bad7c7ed1f6d67e8c5ebecaba62c07a6ea1cc5813c0ea2e41b5")
     version("7.2.1", sha256="bc5140deec3b1c93c13796a8a6d2cb7e50aa87fd89f60f87c8d801d66f2fd156")
@@ -123,6 +125,8 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
         "7.2.1",
         "7.2.3",
         "7.13.0",
+        "7.14.0",
+        "10.0.0",
     ]:
         depends_on(f"hip@{ver}", when=f"@{ver}")
         depends_on(f"hipsparse@{ver}", when=f"@{ver}")
@@ -145,13 +149,15 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
         "7.2.1",
         "7.2.3",
         "7.13.0",
+        "7.14.0",
+        "10.0.0",
     ]:
         depends_on(f"rocm-smi-lib@{ver}", when=f"@{ver}")
 
     for ver in ["7.0.0", "7.0.2"]:
         depends_on(f"roctracer-dev@{ver}", when=f"@{ver}")
 
-    for ver in ["7.1.0", "7.1.1", "7.2.0", "7.2.1", "7.2.3", "7.13.0"]:
+    for ver in ["7.1.0", "7.1.1", "7.2.0", "7.2.1", "7.2.3", "7.13.0", "7.14.0", "10.0.0"]:
         depends_on(f"roctracer-dev@{ver}", when=f"@{ver}")
         depends_on(f"hipblas-common@{ver}", when=f"@{ver}")
         depends_on(f"rocm-cmake@{ver}", when=f"@{ver}")
@@ -201,7 +207,7 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
                 int(match.group(1)), int(match.group(2)), int(match.group(3))
             )
         else:
-            ver = None
+            ver = super().determine_version(lib)
         return ver
 
     def patch(self):
@@ -224,7 +230,7 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
                 "hipBLASLt/library/src/amd_detail/rocblaslt/src/extops/CMakeLists.txt",
                 string=True,
             )
-        if self.spec.satisfies("@7.1:"):
+        if self.spec.satisfies("@7.1:7.14"):
             filter_file(
                 "${PROJECT_BINARY_DIR}/lib",
                 ":".join(["${PROJECT_BINARY_DIR}/lib", joblib_path]),
@@ -232,6 +238,18 @@ class Hipsparselt(ROCmLibrary, CMakePackage, ROCmPackage):
                 "projects/hipblaslt/tensilelite/Tensile/cmake/TensileConfig.cmake",
                 string=True,
             )
+            yaml_path = os.path.join(self.spec["py-pyyaml"].prefix, purelib)
+            packaging_path = os.path.join(self.spec["py-packaging"].prefix, purelib)
+            msgpack_path = os.path.join(self.spec["py-msgpack"].prefix, purelib)
+            filter_file(
+                "${_python_path}",
+                ":".join(
+                    ["${_python_path}", joblib_path, yaml_path, packaging_path, msgpack_path]
+                ),
+                "projects/hipblaslt/cmake/hipblaslt_python.cmake",
+                string=True,
+            )
+        if self.spec.satisfies("@10.0:"):
             yaml_path = os.path.join(self.spec["py-pyyaml"].prefix, purelib)
             packaging_path = os.path.join(self.spec["py-packaging"].prefix, purelib)
             msgpack_path = os.path.join(self.spec["py-msgpack"].prefix, purelib)

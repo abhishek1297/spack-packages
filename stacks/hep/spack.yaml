@@ -6,6 +6,7 @@ spack:
 
   concretizer:
     static_analysis: true
+    unify: when_possible
 
   config:
     # ROOT fails downloads frequently
@@ -36,7 +37,7 @@ spack:
       - target=x86_64_v3
     celeritas:
       require:
-      - +geant4 +hepmc3 +root +shared cxxstd=20
+      - +covfie +geant4 +hepmc3 +root +shared cxxstd=20
       - target=x86_64_v3
     geant4:
       require:
@@ -66,7 +67,7 @@ spack:
       - target=x86_64_v3
     vecgeom:
       require:
-      - +gdml +geant4 +root +shared cxxstd=20
+      - +gdml +shared cxxstd=20
       - target=x86_64_v3
 
     # Mark geant4 data as external to prevent wasting bandwidth on GB-scale files
@@ -91,18 +92,20 @@ spack:
   - alpgen
   - ampt
   - apfel +lhapdf +python
-  - celeritas ~cuda +openmp ~rocm +vecgeom +covfie
+  - celeritas ~cuda +openmp ~rocm +vecgeom
   - cepgen
   - cernlib +shared
   - collier
   - dd4hep +ddalign +ddcad +ddcond +dddetectors +dddigi +ddeve +ddg4 +ddrec +edm4hep +hepmc3 +lcio +utilityapps +xercesc
   - delphes +pythia8
+  - detray
   - dpmjet
   - edm4hep
   - evtgen +hepmc3 +photos +pythia8 +sherpa +tauola
   - fastjet plugins=all
   - feynhiggs
   - fjcontrib
+  - form
   #- garfieldpp
   - gaudi +aida +examples +heppdt +xercesc
   - geant4 ~vtk ^[virtuals=qmake] qt
@@ -115,6 +118,7 @@ spack:
   # Note: ~vbfnlo for herwig3 works around gfortran-13 ICE in CI (does not reproduce locally).
   # Re-enable once CI environment is updated with a fix, i.e. a fixed gfortran-13+.
   - herwig3 +njet ~vbfnlo
+  - hoppet
   - hztool
   - lcio -examples ~jar +rootdict  # Note: lcio +examples ^ncurses -termlib, which leads to conflicts
   - lhapdf +python
@@ -133,6 +137,7 @@ spack:
   - py-boost-histogram
   - py-dask-awkward ~io
   - py-dask-histogram
+  - py-gosam
   - py-hepunits
   - py-hist +dask +fit +plot
   - py-histbook
@@ -145,6 +150,7 @@ spack:
   - py-vector
   - py-zfit
   - pythia8 +evtgen +fastjet +hdf5 +hepmc +hepmc3 +lhapdf ~madgraph5amc +python +rivet ~root # pythia8 and root circularly depend
+  - recola
   - rivet
   - root ~cuda
   - root ~builtin_llvm
@@ -158,12 +164,13 @@ spack:
 
   # CUDA
   #- acts +cuda +traccc cuda_arch=80
-  #- celeritas +cuda ~openmp +vecgeom cuda_arch=80 +covfie
+  - celeritas +cuda ~openmp +vecgeom cuda_arch=80 +covfie
   - root +cuda +cudnn +tmva-gpu
   - vecgeom +cuda cuda_arch=80
 
   # ROCm
-  - celeritas +rocm amdgpu_target=gfx90a ~openmp ~vecgeom # only available with ORANGE
+  # FIXME: incompatibility with 5.7.1 hip API to be patched shortly
+  # - celeritas +rocm amdgpu_target=gfx90a ~openmp ~vecgeom # only available with ORANGE
 
   ci:
     pipeline-gen:

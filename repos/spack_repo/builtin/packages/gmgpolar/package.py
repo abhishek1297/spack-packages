@@ -20,6 +20,7 @@ class Gmgpolar(CMakePackage):
     license("Apache-2.0", checked_by="tpadioleau")
 
     version("main", branch="main", no_cache=True)
+    version("2.4.1", sha256="2813b1a30b1aca8892a496d2f39e50a34a6f2d2df46590b2b4442739b54d9033")
     version("2.3.1", sha256="c8e3ec83ec04bbe2c1e7d8f27e7be18a816ace04c3b3bae78c616f4d545c3382")
 
     depends_on("cxx", type="build")
@@ -30,6 +31,27 @@ class Gmgpolar(CMakePackage):
 
     depends_on("googletest@1.17:", type="test")
     depends_on("googletest@:1", type="test")
+
+    requires(
+        "^kokkos +cuda_constexpr",
+        when="^kokkos +cuda",
+        msg="GMGPolar relies on the constexpr support of nvcc",
+    )
+    requires(
+        "^kokkos +cuda_relocatable_device_code",
+        when="^kokkos +cuda",
+        msg="GMGPolar relies on relocatable device code",
+    )
+    requires(
+        "^kokkos +hip_relocatable_device_code",
+        when="^kokkos +rocm",
+        msg="GMGPolar relies on relocatable device code",
+    )
+    requires(
+        "^kokkos +sycl_relocatable_device_code",
+        when="^kokkos +sycl",
+        msg="GMGPolar relies on relocatable device code",
+    )
 
     # Fixes missing headers in 2.3.1
     patch(
@@ -46,6 +68,7 @@ class Gmgpolar(CMakePackage):
 
     def cmake_args(self):
         args = [
+            self.define("GMGPOLAR_BUILD_BENCHMARKS", False),
             self.define("GMGPOLAR_BUILD_TESTS", self.run_tests),
             self.define("GMGPOLAR_ENABLE_COVERAGE", False),
             self.define("GMGPOLAR_USE_LIKWID", False),

@@ -335,6 +335,15 @@ To resolve this problem, please try the following:
         """
         os.environ["FORCE_UNSAFE_CONFIGURE"] = "1"
 
+        # The macOS 27 SDK exposes these functions as weak imports when
+        # targeting older macOS releases. Autoconf link tests mistake that for
+        # runtime availability and the resulting binaries call through NULL.
+        deployment_target = os.environ.get("MACOSX_DEPLOYMENT_TARGET")
+        if self.spec.satisfies("platform=darwin") and deployment_target:
+            if int(deployment_target.split(".", 1)[0]) < 27:
+                os.environ["ac_cv_func_dup3"] = "no"
+                os.environ["ac_cv_func_pipe2"] = "no"
+
     @run_before("configure")
     def _do_patch_libtool_configure(self) -> None:
         """Patch bugs that propagate from libtool macros into "configure" and
@@ -524,6 +533,16 @@ To resolve this problem, please try the following:
                 start_at=start_at,
                 stop_at=stop_at,
             )
+
+            if self.spec.satisfies("platform=darwin"):
+                # Libtool has a check for nagfor on darwin systems, but it does not
+                # recognize NAG behind the compiler wrappers, so fix that check:
+                x.filter(
+                    regex=r"(\s*case\s+)(\$CC)(\s+in\s*)$",
+                    repl='\\1`test "x$with_nag" = xyes && echo nagfor || echo \\2`\\3',
+                    start_at="# On Darwin other compilers",
+                    stop_at="esac",
+                )
 
     @property
     def configure_directory(self) -> str:
